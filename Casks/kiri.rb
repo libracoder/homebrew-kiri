@@ -36,7 +36,11 @@ cask "kiri" do
         "dev.kiri.docker-socket",
         "dev.kiri.usb",
       ],
-      delete:       "/etc/resolver/kiri.local",
+      delete:       [
+        "/etc/resolver/kiri.local",
+        "/Library/PrivilegedHelperTools/dev.kiri.usb",
+        "/Library/PrivilegedHelperTools/dev.kiri.usb.source",
+      ],
       trash:        [
         "~/.kiri",
         "~/Library/Application Support/Kiri",
