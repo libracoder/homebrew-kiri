@@ -27,9 +27,17 @@ cask "kiri" do
   # the docker context and builder, /var/run/docker.sock, the resolver and
   # /usr/local/bin/kiri. Only on zap, as Homebrew runs `uninstall` on reinstall.
   # It runs first, in one pass; `launchctl` and `delete` are the backup.
+  # By the time zap runs, Homebrew may already have moved Kiri.app out of the
+  # Applications folder into its own copy, so run whichever kiri is there.
   zap early_script: {
-        executable:   "#{appdir}/Kiri.app/Contents/MacOS/kiri",
-        args:         ["setup", "--uninstall"],
+        executable:   "/bin/sh",
+        args:         [
+          "-c",
+          'for k in "$@"; do [ -x "$k" ] && exec "$k" setup --uninstall; done',
+          "sh",
+          "#{appdir}/Kiri.app/Contents/MacOS/kiri",
+          "#{staged_path}/Kiri.app/Contents/MacOS/kiri",
+        ],
         must_succeed: false,
       },
       launchctl:    [
